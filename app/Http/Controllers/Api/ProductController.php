@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
-use Illuminate\Support\Facades\Log;
+use App\Models\User;
 
 class ProductController extends Controller
 {
@@ -18,6 +18,13 @@ class ProductController extends Controller
     public function listSingleProduct($product_id)
     {
         return ProductResource::collection(Product::find($product_id));
+    }
+
+    public function listUsersProducts($user_id)
+    {
+        $user = User::find($user_id);
+
+        return ProductResource::collection(Product::UsersProducts($user));
     }
 
     public function store(ProductRequest $request)
@@ -50,5 +57,19 @@ class ProductController extends Controller
         $product = Product::find($product_id);
 
         return $product->deleteProduct();
+    }
+
+    public function addUserToProduct($product_id)
+    {
+        $product = Product::find($product_id);
+
+        return $product->addUser($product);
+    }
+
+    public function removeUserFromProduct($product_id)
+    {
+        $product = Product::find($product_id);
+
+        return $product->removeUser($product);
     }
 }

@@ -21,5 +21,7 @@ Route::middleware('auth')->group(function () {
     Route::get('products', 'Api\ProductController@listAllProducts');
     Route::get('products/{$product_id}', 'Api\ProductController@listSingleProduct');
     Route::post('products/create', 'Api\ProductController@store');
-    Route::delete('products/{$product_id}','Api\ProductController@delete');
+    Route::delete('products/delete/{$product_id}','Api\ProductController@delete');
+    Route::post('products/{$product_id}/add_user', 'Api\ProductController@addUserToProduct');
+    Route::post('products/{$product_id}/remove_user', 'Api\ProductController@removeUserFromProduct');
 });

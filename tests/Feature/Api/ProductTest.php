@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithExceptionHandling;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class ProductTest extends TestCase
@@ -60,5 +61,58 @@ class ProductTest extends TestCase
         $this->assertDatabaseHas('products', [
             'name' => 'P1'
         ]);
+    }
+
+    /**
+     * @test
+     */
+    public function product_can_be_deleted()
+    {
+        $user = factory(User::class)->create();
+
+        $this->actingAs($user)
+            ->post('/api/products/create', [
+                'name' => 'P1',
+                'description' => 'Desc P1',
+                'price' => '111',
+                'image' => 'asda',
+            ])->assertStatus(200);
+
+        $this->assertDatabaseHas('products', [
+            'name' => 'P1'
+        ]);
+
+        $product = Product::first();
+
+        $this->actingAs($user)
+            ->post('/api/products/delete/' . $product->id)
+            ->assertStatus(200);
+
+        $products = Product::all();
+        $this->assertCount(0, $products);
+    }
+
+    /**
+     * @test
+     */
+    public function user_can_be_added_to_product()
+    {
+        $user = factory(User::class)->create();
+
+        $this->actingAs($user)
+            ->post('/api/products/create', [
+                'name' => 'P1',
+                'description' => 'Desc P1',
+                'price' => '111',
+                'image' => 'asda',
+            ])->assertStatus(200);
+
+        $product = Product::first();
+
+        $this->actingAs($user)
+            ->post('/api/products/' . $product->id . '/add_user')
+            ->assertStatus(200);
+
+
     }
 }
