@@ -15,6 +15,8 @@
                     @endif
 
                     {{ __('You are logged in!') }}
+                        <dashboard-component></dashboard-component>
+
                 </div>
             </div>
         </div>
