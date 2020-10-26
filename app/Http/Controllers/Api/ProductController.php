@@ -58,7 +58,7 @@ class ProductController extends Controller
     {
         $product = Product::find($product_id);
 
-        return $product->deleteProduct();
+        return $product->deleteProduct($product);
     }
 
     public function addUserToProduct($product_id)

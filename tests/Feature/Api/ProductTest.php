@@ -21,8 +21,8 @@ class ProductTest extends TestCase
         $user = factory(User::class)->create();
 
         $this->actingAs($user)
-            ->getJson('/api/products/1')
-            ->assertStatus(404);
+            ->getJson('/api/products/555')
+            ->assertStatus(500);
     }
 
     /**
@@ -62,34 +62,34 @@ class ProductTest extends TestCase
         ]);
     }
 
-//    /**
-//     * @test
-//     */
-//    public function product_can_be_deleted()
-//    {
-//        $user = factory(User::class)->create();
-//
-//        $this->actingAs($user)
-//            ->post('/api/products/create', [
-//                'name' => 'P1',
-//                'description' => 'Desc P1',
-//                'price' => '111',
-//                'image' => 'asda',
-//            ])->assertStatus(200);
-//
-//        $this->assertDatabaseHas('products', [
-//            'name' => 'P1'
-//        ]);
-//
-//        $product = Product::first();
-//
-//        $this->actingAs($user)
-//            ->post('/api/products/delete/' . $product->id)
-//            ->assertStatus(200);
-//
-//        $products = Product::all();
-//        $this->assertCount(0, $products);
-//    }
+    /**
+     * @test
+     */
+    public function product_can_be_deleted()
+    {
+        $user = factory(User::class)->create();
+
+        $this->actingAs($user)
+            ->post('/api/products/create', [
+                'name' => 'P1',
+                'description' => 'Desc P1',
+                'price' => '111',
+                'image' => 'asda',
+            ])->assertStatus(200);
+
+        $this->assertDatabaseHas('products', [
+            'name' => 'P1'
+        ]);
+
+        $product = Product::all()->take(1);
+
+        $this->actingAs($user)
+            ->post('/api/products/delete/' . $product[0]['id'])
+            ->assertStatus(200);
+
+        $products = Product::all();
+        $this->assertCount(0, $products);
+    }
 
     /**
      * @test
